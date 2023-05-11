@@ -4,15 +4,65 @@ import './home.css'
 import { Link } from "react-router-dom"
 import { toast } from 'react-toastify';
 
+import { auth } from '../../firebaseConnection'
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { useNavigate } from "react-router-dom";
+
 export default function Home() {
 
     const [email, setEmail] = useState('')
     const[password, setPassword] = useState('')
+    const navigate = useNavigate()
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
         e.preventDefault()
        
         if(email !== '' && password !== '') {
+           if (password.length < 6 ) {
+            toast.info('A senha deve ter 6 caracteres ou mais', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
+                
+           } else {
+            await signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                
+                navigate('/admin', {replace: true})
+    
+               }).catch((error) => {
+                    if (error.code === 'auth/user-not-found') {
+                        toast.error('Usuário não encontrado!', {
+                            position: "top-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            });
+                    } else {
+                        toast.error('Erro ao fazer login, verifique seu email e senha!', {
+                            position: "top-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                            });
+                    }
+               })
+           }
            
         }
          else{
