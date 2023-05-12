@@ -1,0 +1,64 @@
+.admin-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.admin-container h1{
+    margin-bottom: 20px;
+}
+
+.tarefas{
+    margin-top: 26px;
+}
+
+.icon{
+    color: #3366ff;
+}
+
+.btn-edit, .btn-delete, .btn-logout {
+    padding: 10px;
+    background: transparent;
+    border: none;
+}
+
+.btn-logout{
+    position: absolute;
+    bottom: 6%;
+    left: 4%;
+    border-radius: 50%;
+    border: 0;
+    background-color:rgba(209,38,41,0.35);
+    color: #fafafa;
+    transition: all ease-in 0.3s;
+}
+
+.btn-logout:hover{
+    background-color:rgba(209,38,41);
+    color: #fff;
+    transition: all ease-in 0.3s;
+}
+
+.tarefas{
+    width: 90%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(18,18,18,0.38);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    justify-content: center;
+    padding: 14px;
+}
+
+.tarefas p{
+    margin-bottom: 8px;
+}
+
+.tarefas button{
+    margin-right: 8px;
+    border: 0;
+    padding: 4px;
+}
+

@@ -81,10 +81,10 @@ export default function Home() {
 
     return(
         <div className="home-container">
-            <h1>Lista de tarefas</h1>
+            <h1>Lista de tarefas </h1>
             <span>Gerencia sua agenda de forma fácil.</span>
 
-            <form className="form" onSubmit={handleLogin}>
+            <form onSubmit={handleLogin}>
                 <input type="email" placeholder="Digite seu email..." onChange={(e) => {setEmail(e.target.value)}}/>
 
                 <input type="password" autoComplete="false" placeholder="Digite sua senha" onChange={(e) => setPassword(e.target.value)}/>

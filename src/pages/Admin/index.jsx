@@ -1,5 +1,10 @@
 import './admin.css'
 import { useState } from 'react'
+import { auth } from '../../firebaseConnection.js'
+import { signOut } from 'firebase/auth'
+
+import { faPenToSquare, faCircleCheck, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Admin() {
 
@@ -8,6 +13,10 @@ export default function Admin() {
     async function handleRegister(e) {
         e.preventDefault()
 
+    }
+
+    async function handleLogout() {
+        await signOut(auth)
     }
 
     return(
@@ -22,17 +31,18 @@ export default function Admin() {
                 <button type='submit'>Registrar Tarefa</button>
            </form>
 
-           <article>
+           <article className='tarefas'>
             <p>Estudar js e react</p>
+            
 
             <div>
-                <button>Editar</button>
-                <button className='btn-delete'>Concluir</button>
+                <button className="btn-edit"><FontAwesomeIcon icon={faPenToSquare} className="icon" size="xl"/> </button>
+                <button className='btn-delete'><FontAwesomeIcon icon={faCircleCheck} size="xl" style={{color: '#ffcc23'}}/></button>
             </div>
            </article>
 
 
-           <button className='btn-logout'>Sair</button>
+           <button onClick={handleLogout} className='btn-logout'><FontAwesomeIcon icon={faRightFromBracket} size="2xl"/></button>
         </div>
     )
 }
