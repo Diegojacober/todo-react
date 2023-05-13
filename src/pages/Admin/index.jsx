@@ -10,7 +10,9 @@ import {
     onSnapshot,
     query,
     orderBy,
-    where
+    where,
+    doc,
+    deleteDoc
 } from 'firebase/firestore'
 
 import { faPenToSquare, faCircleCheck, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +24,25 @@ export default function Admin() {
     const [user, setUser] = useState({})
 
     const [tarefas, setTarefas] = useState([])
+
+
+    async function deleteTarefa(id) {
+        const docRef = doc(db, "tarefas", id)
+
+        await deleteDoc(docRef)
+        .then(() => {
+            return toast.success('Tarefa deletada com sucesso!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+        })
+    }
 
     async function handleRegister(e) {
         e.preventDefault()
@@ -91,7 +112,7 @@ export default function Admin() {
                             userUid: doc.data().userUid
                         })
                     })
-                    
+
                     setTarefas(lista)
                 })
             }
@@ -124,7 +145,7 @@ export default function Admin() {
 
                         <div>
                             <button className="btn-edit"><FontAwesomeIcon icon={faPenToSquare} className="icon" size="xl" /> </button>
-                            <button className='btn-delete'><FontAwesomeIcon icon={faCircleCheck} size="xl" style={{ color: '#ffcc23' }} /></button>
+                            <button className='btn-delete' onClick={() => deleteTarefa(tarefa.id)}><FontAwesomeIcon icon={faCircleCheck} size="xl" style={{ color: '#ffcc23' }} /></button>
                         </div>
                     </article>
                 )
