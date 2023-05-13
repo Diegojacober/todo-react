@@ -24,7 +24,7 @@ export default function Register() {
                     navigate('/admin', { replace: true})
                 })
                 .catch((e) => {
-                    if (e.code == 'auth/email-already-in-use') {
+                    if (e.code === 'auth/email-already-in-use') {
                         toast.info('Usuário ja cadastrado', {
                             position: "top-center",
                             autoClose: 5000,
