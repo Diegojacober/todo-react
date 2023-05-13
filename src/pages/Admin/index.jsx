@@ -12,7 +12,8 @@ import {
     orderBy,
     where,
     doc,
-    deleteDoc
+    deleteDoc,
+    updateDoc
 } from 'firebase/firestore'
 
 import { faPenToSquare, faCircleCheck, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
@@ -24,25 +25,72 @@ export default function Admin() {
     const [user, setUser] = useState({})
 
     const [tarefas, setTarefas] = useState([])
+    const [edit, setEdit] = useState({})
 
 
     async function deleteTarefa(id) {
         const docRef = doc(db, "tarefas", id)
 
         await deleteDoc(docRef)
-        .then(() => {
-            return toast.success('Tarefa deletada com sucesso!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        })
+            .then(() => {
+                return toast.success('Tarefa deletada com sucesso!', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            })
     }
+
+
+    function editTarefa(tarefa) {
+        setTarefaInput(tarefa.tarefa)
+        setEdit(tarefa)
+    }
+
+    async function handleUpdateTarefa() {
+        const docRef = doc(db, "tarefas", edit.id)
+        await updateDoc(docRef, {
+            tarefa: tarefaInput
+        })
+            .then(() => {
+                toast.success('Tarefa atualizada com sucesso!', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+                setTarefaInput('')
+                setEdit({})
+            }).catch((e) => {
+                setTarefaInput('')
+                setEdit({})
+                return toast.error('Erro ao atualizar a tarefa', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+            })
+    }
+
+    function cancelEdit() {
+        setTarefaInput('')
+        setEdit({})
+    }
+
 
     async function handleRegister(e) {
         e.preventDefault()
@@ -58,6 +106,11 @@ export default function Admin() {
                 progress: undefined,
                 theme: "dark",
             });
+        }
+
+        if (edit.id) {
+            handleUpdateTarefa()
+            return
         }
 
         await addDoc(collection(db, "tarefas"), {
@@ -134,7 +187,15 @@ export default function Admin() {
                 <textarea value={tarefaInput} placeholder='Digite sua tarefa...' onChange={(e) => setTarefaInput(e.target.value)} />
 
 
-                <button type='submit'>Registrar Tarefa</button>
+
+                {Object.keys(edit).length > 0 ? (
+                    <button type='submit'>Atualizar Tarefa</button>
+                ) : (<button type='submit'>Registrar Tarefa</button>)}
+
+                {Object.keys(edit).length > 0 &&
+                    (
+                        <button className='button-cancel' onClick={cancelEdit}>Cancelar edição</button>
+                    )}
             </form>
 
             {tarefas.map((tarefa) => {
@@ -144,7 +205,7 @@ export default function Admin() {
 
 
                         <div>
-                            <button className="btn-edit"><FontAwesomeIcon icon={faPenToSquare} className="icon" size="xl" /> </button>
+                            <button className="btn-edit" onClick={() => editTarefa(tarefa)}><FontAwesomeIcon icon={faPenToSquare} className="icon" size="xl" /> </button>
                             <button className='btn-delete' onClick={() => deleteTarefa(tarefa.id)}><FontAwesomeIcon icon={faCircleCheck} size="xl" style={{ color: '#ffcc23' }} /></button>
                         </div>
                     </article>
